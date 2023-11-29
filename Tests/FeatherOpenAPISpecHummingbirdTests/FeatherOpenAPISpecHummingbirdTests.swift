@@ -1,9 +1,16 @@
+//
+//  FeatherOpenAPISpecHummingbirdTests.swift
+//  FeatherOpenAPISpecHummingbird
+//
+//  Created by Tibor Bödecs on 24/11/2023.
+//
+
 import Foundation
 import XCTest
 import OpenAPIRuntime
 import HTTPTypes
 import FeatherOpenAPISpec
-import FeatherOpenAPISpecRuntimeHummingbird
+import FeatherOpenAPISpecHummingbird
 import Hummingbird
 import HummingbirdFoundation
 import HummingbirdXCT
@@ -18,7 +25,7 @@ struct Todo: Codable {
 
 extension Todo: HBResponseCodable {}
 
-final class FeatherOpenAPISpecRuntimeHummingbird: XCTestCase {
+final class FeatherOpenAPISpecHummingbirdTests: XCTestCase {
 
     func other() async throws {
         throw SomeError.foo
@@ -48,12 +55,12 @@ final class FeatherOpenAPISpecRuntimeHummingbird: XCTestCase {
             Path("todos")
             Header(.contentType, "application/json")
             Body(body)
-            Expectation(.ok)
-            Expectation { response, body in
+            Expect(.ok)
+            Expect { response, body in
                 var buffer = ByteBuffer()
                 switch body.length {
                 case .known(let value):
-                    try await body.collect(upTo: value, into: &buffer)
+                    try await body.collect(upTo: Int(value), into: &buffer)
                 case .unknown:
                     for try await chunk in body {
                         buffer.writeBytes(chunk)

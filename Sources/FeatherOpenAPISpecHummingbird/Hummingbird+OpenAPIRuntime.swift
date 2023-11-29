@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  Hummingbird+OpenAPIRuntime.swift
+//  FeatherOpenAPISpecHummingbird
 //
-//
-//  Created by Tibor Bodecs on 24/11/2023.
+//  Created by Tibor Bödecs on 24/11/2023.
 //
 
 import OpenAPIRuntime
