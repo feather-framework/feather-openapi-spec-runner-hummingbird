@@ -1,8 +1,8 @@
 //
-//  File.swift
+//  HummingbirdExpectationRequestRunner.swift
+//  FeatherOpenAPISpecHummingbird
 //
-//
-//  Created by Tibor Bodecs on 23/11/2023.
+//  Created by Tibor Bödecs on 24/11/2023.
 //
 
 import OpenAPIRuntime
@@ -31,7 +31,7 @@ public struct HummingbirdExpectationRequestRunner: SpecRunner {
         var reqBuffer = ByteBuffer()
         switch body.length {
         case .known(let value):
-            try await body.collect(upTo: value, into: &reqBuffer)
+            try await body.collect(upTo: Int(value), into: &reqBuffer)
         case .unknown:
             for try await chunk in body {
                 reqBuffer.writeBytes(chunk)
