@@ -11,12 +11,28 @@ import Hummingbird
 import HummingbirdXCT
 import FeatherOpenAPISpec
 
+extension HTTPBody {
+
+    func collect() async throws -> ByteBuffer {
+        var buffer = ByteBuffer()
+        switch length {
+        case .known(let value):
+            try await collect(upTo: Int(value), into: &buffer)
+        case .unknown:
+            for try await chunk in self {
+                buffer.writeBytes(chunk)
+            }
+        }
+        return buffer
+    }
+}
+ 
 public struct HummingbirdExpectationRequestRunner: SpecRunner {
 
-    let app: HBApplication
+    let app: any HBApplicationProtocol
 
     public init(
-        app: HBApplication
+        app: any HBApplicationProtocol
     ) {
         self.app = app
     }
@@ -28,39 +44,33 @@ public struct HummingbirdExpectationRequestRunner: SpecRunner {
         response: HTTPResponse,
         body: HTTPBody
     ) {
-        var reqBuffer = ByteBuffer()
-        switch body.length {
-        case .known(let value):
-            try await body.collect(upTo: Int(value), into: &reqBuffer)
-        case .unknown:
-            for try await chunk in body {
-                reqBuffer.writeBytes(chunk)
+        let buffer = try await body.collect()
+        let uri = {
+            var uri = req.path ?? ""
+            if !uri.hasPrefix("/") {
+                uri = "/" + uri
             }
-        }
+            return uri
+        }()
 
-        var result: (response: HTTPResponse, body: HTTPBody)!
-
-        var uri = req.path ?? ""
-        if !uri.hasPrefix("/") {
-            uri = "/" + uri
+        return try await app.test(.router) { client in
+            try await client.XCTExecute(
+                uri: uri,
+                method: req.method,
+                headers: req.headerFields,
+                body: buffer,
+                testCallback: { res in
+                    let response = HTTPResponse(
+                        status: .init(
+                            code: res.status.code,
+                            reasonPhrase: res.status.reasonPhrase
+                        ),
+                        headerFields: res.headers
+                    )
+                    let body = HTTPBody(.init(buffer: res.body))
+                    return (response: response, body: body)
+                }
+            )
         }
-        try app.XCTExecute(
-            uri: uri,
-            method: .init(req.method),
-            headers: .init(req.headerFields),
-            body: reqBuffer,
-            testCallback: { res in
-                let response = HTTPResponse(
-                    status: .init(
-                        code: Int(res.status.code),
-                        reasonPhrase: res.status.reasonPhrase
-                    ),
-                    headerFields: .init(res.headers)
-                )
-                let body = HTTPBody(.init(buffer: res.body ?? .init()))
-                result = (response: response, body: body)
-            }
-        )
-        return result
     }
 }

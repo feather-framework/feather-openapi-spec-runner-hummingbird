@@ -10,10 +10,9 @@ import XCTest
 import OpenAPIRuntime
 import HTTPTypes
 import FeatherOpenAPISpec
-import FeatherOpenAPISpecHummingbird
 import Hummingbird
-import HummingbirdFoundation
 import HummingbirdXCT
+@testable import FeatherOpenAPISpecHummingbird
 
 enum SomeError: Error {
     case foo
@@ -32,14 +31,12 @@ final class FeatherOpenAPISpecHummingbirdTests: XCTestCase {
     }
 
     func testHummingbird() async throws {
-        let app = HBApplication(testing: .embedded)
-        app.encoder = JSONEncoder()
-        app.decoder = JSONDecoder()
-        app.router.post("todos") { req in try req.decode(as: Todo.self) }
+        let router = HBRouter()
+        router.post("todos") { req, ctx in
+            try await req.decode(as: Todo.self, context: ctx)
+        }
 
-        try app.XCTStart()
-        defer { app.XCTStop() }
-
+        let app = HBApplication(router: router)
         let runner = HummingbirdExpectationRequestRunner(app: app)
         try await test(using: runner)
     }
@@ -57,15 +54,7 @@ final class FeatherOpenAPISpecHummingbirdTests: XCTestCase {
             Body(body)
             Expect(.ok)
             Expect { response, body in
-                var buffer = ByteBuffer()
-                switch body.length {
-                case .known(let value):
-                    try await body.collect(upTo: Int(value), into: &buffer)
-                case .unknown:
-                    for try await chunk in body {
-                        buffer.writeBytes(chunk)
-                    }
-                }
+                let buffer = try await body.collect()
                 let decoder = JSONDecoder()
                 let todo = try decoder.decode(Todo.self, from: buffer)
                 XCTAssertEqual(todo.title, "task01")
