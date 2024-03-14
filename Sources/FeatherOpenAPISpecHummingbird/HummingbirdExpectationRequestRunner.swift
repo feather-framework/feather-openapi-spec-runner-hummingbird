@@ -8,7 +8,7 @@
 import OpenAPIRuntime
 import HTTPTypes
 import Hummingbird
-import HummingbirdXCT
+import HummingbirdTesting
 import FeatherOpenAPISpec
 
 extension HTTPBody {
@@ -26,17 +26,20 @@ extension HTTPBody {
         return buffer
     }
 }
- 
+
+/// a Hummingbird based spec runner
 public struct HummingbirdExpectationRequestRunner: SpecRunner {
 
-    let app: any HBApplicationProtocol
+    let app: any ApplicationProtocol
 
+    /// initializes a new spec runner using an application protocol
     public init(
-        app: any HBApplicationProtocol
+        app: any ApplicationProtocol
     ) {
         self.app = app
     }
 
+    /// Execute a request
     public func execute(
         req: HTTPRequest,
         body: HTTPBody
@@ -54,7 +57,7 @@ public struct HummingbirdExpectationRequestRunner: SpecRunner {
         }()
 
         return try await app.test(.router) { client in
-            try await client.XCTExecute(
+            try await client.execute(
                 uri: uri,
                 method: req.method,
                 headers: req.headerFields,
