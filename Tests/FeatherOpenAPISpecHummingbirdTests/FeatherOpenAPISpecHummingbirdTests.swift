@@ -11,7 +11,7 @@ import OpenAPIRuntime
 import HTTPTypes
 import FeatherOpenAPISpec
 import Hummingbird
-import HummingbirdXCT
+import HummingbirdTesting
 @testable import FeatherOpenAPISpecHummingbird
 
 enum SomeError: Error {
@@ -22,7 +22,7 @@ struct Todo: Codable {
     let title: String
 }
 
-extension Todo: HBResponseCodable {}
+extension Todo: ResponseCodable {}
 
 final class FeatherOpenAPISpecHummingbirdTests: XCTestCase {
 
@@ -31,12 +31,12 @@ final class FeatherOpenAPISpecHummingbirdTests: XCTestCase {
     }
 
     func testHummingbird() async throws {
-        let router = HBRouter()
+        let router = Router()
         router.post("todos") { req, ctx in
             try await req.decode(as: Todo.self, context: ctx)
         }
 
-        let app = HBApplication(router: router)
+        let app = Application(router: router)
         let runner = HummingbirdExpectationRequestRunner(app: app)
         try await test(using: runner)
     }
