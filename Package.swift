@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "feather-openapi-spec-hummingbird",
+    name: "feather-spec-hummingbird",
     platforms: [
         .macOS(.v14),
         .iOS(.v17),
@@ -11,21 +11,21 @@ let package = Package(
         .visionOS(.v1),
     ],
     products: [
-        .library(name: "FeatherOpenAPISpecHummingbird", targets: ["FeatherOpenAPISpecHummingbird"]),
+        .library(name: "FeatherSpecHummingbird", targets: ["FeatherSpecHummingbird"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/feather-framework/feather-openapi-spec", .upToNextMinor(from: "0.2.0")),
+        .package(url: "https://github.com/feather-framework/feather-spec", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0-beta.1"),
         
     ],
     targets: [
-        .target(name: "FeatherOpenAPISpecHummingbird", dependencies: [
-            .product(name: "FeatherOpenAPISpec", package: "feather-openapi-spec"),
+        .target(name: "FeatherSpecHummingbird", dependencies: [
+            .product(name: "FeatherSpec", package: "feather-spec"),
             .product(name: "Hummingbird", package: "hummingbird"),
             .product(name: "HummingbirdTesting", package: "hummingbird"),
         ]),
-        .testTarget(name: "FeatherOpenAPISpecHummingbirdTests", dependencies: [
-            .target(name: "FeatherOpenAPISpecHummingbird"),
+        .testTarget(name: "FeatherSpecHummingbirdTests", dependencies: [
+            .target(name: "FeatherSpecHummingbird"),
         ]),
     ]
 )
