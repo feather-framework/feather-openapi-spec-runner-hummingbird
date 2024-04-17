@@ -1,6 +1,6 @@
-# Feather OpenAPI Spec Hummingbird
+# Feather Spec Hummingbird
 
-The `FeatherOpenAPISpecHummingbird` library provides a Hummingbird runtime for the Feather OpenAPI Spec tool.
+The `FeatherSpecHummingbird` library provides a Hummingbird runtime for the Feather Spec tool.
 
 ## Getting started
 
@@ -13,13 +13,13 @@ Use at your own risk.
 To add a dependency on the package, declare it in your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/feather-framework/feather-openapi-spec-hummingbird", .upToNextMinor(from: "0.3.0")),
+.package(url: "https://github.com/feather-framework/feather-spec-hummingbird", .upToNextMinor(from: "0.5.0")),
 ```
 
-and to your application target, add `FeatherOpenAPISpecHummingbird` to your dependencies:
+and to your application target, add `FeatherSpecHummingbird` to your dependencies:
 
 ```swift
-.product(name: "FeatherOpenAPISpecHummingbird", package: "feather-openapi-spec-hummingbird")
+.product(name: "FeatherSpecHummingbird", package: "feather-spec-hummingbird")
 ```
 
 Example `Package.swift` file with `FeatherService` as a dependency:
@@ -31,11 +31,11 @@ import PackageDescription
 let package = Package(
     name: "my-application",
     dependencies: [
-        .package(url: "https://github.com/feather-framework/feather-openapi-spec-hummingbird", .upToNextMinor(from: "0.3.0")),
+        .package(url: "https://github.com/feather-framework/feather-spec-hummingbird", .upToNextMinor(from: "0.5.0")),
     ],
     targets: [
         .target(name: "MyApplication", dependencies: [
-            .product(name: "FeatherOpenAPISpecHummingbird", package: "feather-openapi-spec-hummingbird")
+            .product(name: "FeatherSpecHummingbird", package: "feather-spec-hummingbird")
         ]),
         .testTarget(name: "MyApplicationTests", dependencies: [
             .target(name: "MyApplication"),

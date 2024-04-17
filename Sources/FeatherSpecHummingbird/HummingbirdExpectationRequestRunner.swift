@@ -1,6 +1,6 @@
 //
 //  HummingbirdExpectationRequestRunner.swift
-//  FeatherOpenAPISpecHummingbird
+//  FeatherSpecHummingbird
 //
 //  Created by Tibor Bödecs on 24/11/2023.
 //
@@ -9,7 +9,7 @@ import OpenAPIRuntime
 import HTTPTypes
 import Hummingbird
 import HummingbirdTesting
-import FeatherOpenAPISpec
+import FeatherSpec
 
 extension HTTPBody {
 

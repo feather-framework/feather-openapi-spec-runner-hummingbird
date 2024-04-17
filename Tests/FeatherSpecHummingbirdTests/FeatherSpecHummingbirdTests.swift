@@ -1,6 +1,6 @@
 //
-//  FeatherOpenAPISpecHummingbirdTests.swift
-//  FeatherOpenAPISpecHummingbird
+//  FeatherSpecHummingbirdTests.swift
+//  FeatherSpecHummingbird
 //
 //  Created by Tibor Bödecs on 24/11/2023.
 //
@@ -9,10 +9,10 @@ import Foundation
 import XCTest
 import OpenAPIRuntime
 import HTTPTypes
-import FeatherOpenAPISpec
+import FeatherSpec
 import Hummingbird
 import HummingbirdTesting
-@testable import FeatherOpenAPISpecHummingbird
+@testable import FeatherSpecHummingbird
 
 enum SomeError: Error {
     case foo
@@ -24,7 +24,7 @@ struct Todo: Codable {
 
 extension Todo: ResponseCodable {}
 
-final class FeatherOpenAPISpecHummingbirdTests: XCTestCase {
+final class FeatherSpecHummingbirdTests: XCTestCase {
 
     func other() async throws {
         throw SomeError.foo
