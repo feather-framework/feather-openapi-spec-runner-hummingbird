@@ -12,7 +12,9 @@ import HummingbirdTesting
 import FeatherSpec
 
 extension HTTPBody {
-
+    /// Collects an HTTPBody into a `ByteBuffer`.
+    ///
+    /// - Returns: The collected `ByteBuffer`.
     func collect() async throws -> ByteBuffer {
         var buffer = ByteBuffer()
         switch length {
@@ -27,13 +29,20 @@ extension HTTPBody {
     }
 }
 
-/// a Hummingbird based spec runner
+/// A custom spec runner for Hummingbird applications.
 public struct HummingbirdExpectationRequestRunner: SpecRunner {
 
+    /// The Hummingbird application.
     let app: any ApplicationProtocol
+    
+    /// The testing setup for the Hummingbird application.
     let testingSetup: TestingSetup
 
-    /// initializes a new spec runner using an application protocol
+    /// Initializes a `HummingbirdExpectationRequestRunner` instance with the specified Hummingbird application and testing setup.
+    ///
+    /// - Parameters:
+    ///   - app: The Hummingbird application to use for executing requests.
+    ///   - testingSetup: The testing setup for the Hummingbird application.
     public init(
         app: any ApplicationProtocol,
         testingSetup: TestingSetup = .live
@@ -42,7 +51,12 @@ public struct HummingbirdExpectationRequestRunner: SpecRunner {
         self.testingSetup = testingSetup
     }
 
-    /// Execute a request
+    /// Executes an HTTP request asynchronously against the Hummingbird application.
+    ///
+    /// - Parameters:
+    ///   - req: The HTTP request to execute.
+    ///   - body: The HTTP request body.
+    /// - Returns: A tuple containing the HTTP response and response body.
     public func execute(
         req: HTTPRequest,
         body: HTTPBody
