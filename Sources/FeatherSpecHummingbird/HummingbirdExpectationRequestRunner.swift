@@ -31,12 +31,15 @@ extension HTTPBody {
 public struct HummingbirdExpectationRequestRunner: SpecRunner {
 
     let app: any ApplicationProtocol
+    let testingSetup: TestingSetup
 
     /// initializes a new spec runner using an application protocol
     public init(
-        app: any ApplicationProtocol
+        app: any ApplicationProtocol,
+        testingSetup: TestingSetup = .live
     ) {
         self.app = app
+        self.testingSetup = testingSetup
     }
 
     /// Execute a request
@@ -56,7 +59,7 @@ public struct HummingbirdExpectationRequestRunner: SpecRunner {
             return uri
         }()
 
-        return try await app.test(.router) { client in
+        return try await app.test(testingSetup) { client in
             try await client.execute(
                 uri: uri,
                 method: req.method,
