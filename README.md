@@ -13,7 +13,7 @@ Use at your own risk.
 To add a dependency on the package, declare it in your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/feather-framework/feather-spec-hummingbird", .upToNextMinor(from: "0.5.0")),
+.package(url: "https://github.com/feather-framework/feather-spec-hummingbird", .upToNextMinor(from: "0.5.1")),
 ```
 
 and to your application target, add `FeatherSpecHummingbird` to your dependencies:
@@ -31,7 +31,7 @@ import PackageDescription
 let package = Package(
     name: "my-application",
     dependencies: [
-        .package(url: "https://github.com/feather-framework/feather-spec-hummingbird", .upToNextMinor(from: "0.5.0")),
+        .package(url: "https://github.com/feather-framework/feather-spec-hummingbird", .upToNextMinor(from: "0.5.1")),
     ],
     targets: [
         .target(name: "MyApplication", dependencies: [
@@ -48,4 +48,5 @@ let package = Package(
 
 See the `FeatherSpecHummingbirdTests` target for a basic Spec implementations.
 
+See developer documentation here:
 [Documentation](https://feather-framework.github.io/feather-spec-hummingbird/documentation/featherspechummingbird)
