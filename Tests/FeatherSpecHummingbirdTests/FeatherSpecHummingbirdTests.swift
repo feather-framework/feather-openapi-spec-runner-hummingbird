@@ -15,7 +15,7 @@ import HummingbirdTesting
 @testable import FeatherSpecHummingbird
 
 final class FeatherSpecHummingbirdTests: FeatherSpecHummingbirdTestCase {
-    
+
     func testGetWithSpecBuilder() async throws {
         let body = try await getTestBody()
         try await SpecBuilder {
@@ -32,7 +32,7 @@ final class FeatherSpecHummingbirdTests: FeatherSpecHummingbirdTestCase {
         .build(using: runner)
         .test()
     }
-    
+
     func testGetWithSpec() async throws {
         let body = try await getTestBody()
         var spec = Spec(runner: runner)
@@ -47,7 +47,7 @@ final class FeatherSpecHummingbirdTests: FeatherSpecHummingbirdTestCase {
         }
         try await spec.test()
     }
-    
+
     func testGetWithSpec2() async throws {
         let body = try await getTestBody()
         try await Spec(runner: runner)
@@ -61,7 +61,7 @@ final class FeatherSpecHummingbirdTests: FeatherSpecHummingbirdTestCase {
             }
             .test()
     }
-    
+
     func testPut() async throws {
         let body = try await getTestBody()
         try await Spec(runner: runner)
@@ -75,7 +75,7 @@ final class FeatherSpecHummingbirdTests: FeatherSpecHummingbirdTestCase {
             }
             .test()
     }
-    
+
     func testPatch() async throws {
         let body = try await getTestBody()
         try await Spec(runner: runner)
@@ -89,43 +89,42 @@ final class FeatherSpecHummingbirdTests: FeatherSpecHummingbirdTestCase {
             }
             .test()
     }
-    
-    
+
     func testGetOK() async throws {
         try await Spec(runner: runner)
             .get("getOk")
             .expect(.ok)
             .test()
     }
-    
+
     func testGetBadRequest() async throws {
         try await Spec(runner: runner)
             .get("getBadRequest")
             .expect(.badRequest)
             .test()
     }
-    
+
     func testPatchInternalServerError() async throws {
         try await Spec(runner: runner)
             .patch("patchInternalServerError")
             .expect(.internalServerError)
             .test()
     }
-    
+
     func testNotFound() async throws {
         try await Spec(runner: runner)
             .head("notAddedToTheRouter")
             .expect(.notFound)
             .test()
     }
-    
+
     private func getTestBody() async throws -> HTTPBody {
         let encoder = JSONEncoder()
         var buffer = ByteBuffer()
         try encoder.encode(TestStruct(title: "task01"), into: &buffer)
         return HTTPBody(.init(buffer: buffer))
     }
-    
+
     private func checkResponse(_ body: HTTPBody) async throws -> TestStruct {
         let buffer = try await body.collect()
         let decoder = JSONDecoder()

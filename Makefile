@@ -20,3 +20,10 @@ check:
 
 format:
 	./scripts/run-swift-format.sh --fix
+
+doc:
+	swift package --allow-writing-to-directory ./docs \
+    generate-documentation --target FeatherSpecHummingbird \
+    --disable-indexing \
+    --transform-for-static-hosting \
+	--output-path ./docs

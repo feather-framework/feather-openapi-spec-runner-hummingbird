@@ -16,7 +16,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/feather-framework/feather-spec", .upToNextMinor(from: "0.3.0")),
         .package(url: "https://github.com/hummingbird-project/hummingbird", from: "2.0.0-beta.1"),
-        
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0")
     ],
     targets: [
         .target(name: "FeatherSpecHummingbird", dependencies: [

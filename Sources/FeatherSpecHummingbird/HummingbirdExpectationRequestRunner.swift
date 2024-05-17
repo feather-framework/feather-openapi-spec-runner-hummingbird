@@ -34,7 +34,7 @@ public struct HummingbirdExpectationRequestRunner: SpecRunner {
 
     /// The Hummingbird application.
     let app: any ApplicationProtocol
-    
+
     /// The testing setup for the Hummingbird application.
     let testingSetup: TestingSetup
 
