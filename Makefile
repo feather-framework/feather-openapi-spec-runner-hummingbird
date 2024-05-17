@@ -26,4 +26,5 @@ doc:
     generate-documentation --target FeatherSpecHummingbird \
     --disable-indexing \
     --transform-for-static-hosting \
+    --hosting-base-path feather-spec-hummingbird \
 	--output-path ./docs

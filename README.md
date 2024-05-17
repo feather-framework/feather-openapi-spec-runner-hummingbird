@@ -44,7 +44,8 @@ let package = Package(
 )
 ```
 
-###  Using FeatherService
+###  Using FeatherSpecHummingbird
 
-See the `FeatherServiceTests` target for a basic service implementation.
+See the `FeatherSpecHummingbirdTests` target for a basic Spec implementations.
 
+[Documentation](https://feather-framework.github.io/feather-spec-hummingbird/documentation/featherspechummingbird)
