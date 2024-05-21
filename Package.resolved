@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/feather-framework/feather-spec",
       "state" : {
-        "revision" : "14cba2b6c99e0a37881633a35b5ff4cf736f9569",
-        "version" : "0.3.0"
+        "revision" : "eee44173a727843d5a16c95190441f00e6ccbef4",
+        "version" : "0.3.1"
       }
     },
     {
