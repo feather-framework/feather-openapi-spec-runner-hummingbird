@@ -22,7 +22,7 @@ and to your application target, add `FeatherSpecHummingbird` to your dependencie
 .product(name: "FeatherSpecHummingbird", package: "feather-spec-hummingbird")
 ```
 
-Example `Package.swift` file with `FeatherService` as a dependency:
+Example `Package.swift` file with `FeatherSpecHummingbird` as a dependency:
 
 ```swift
 // swift-tools-version:5.9
