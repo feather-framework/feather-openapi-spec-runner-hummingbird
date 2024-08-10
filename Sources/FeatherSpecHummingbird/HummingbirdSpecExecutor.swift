@@ -9,10 +9,10 @@ import FeatherSpec
 /// This executor uses a `TestClientProtocol` to perform the actual HTTP request execution and handles
 /// the response and body transformations.
 struct HummingbirdSpecExecutor: SpecExecutor {
-    
+
     /// The client responsible for executing HTTP requests.
     let client: TestClientProtocol
-    
+
     /// Executes an HTTP request with the provided request and body.
     ///
     /// This function collects the body data, constructs the request URI, and uses the client to execute the request.

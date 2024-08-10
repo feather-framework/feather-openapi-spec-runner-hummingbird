@@ -14,6 +14,6 @@ extension Todo {
         let encoder = JSONEncoder()
         var buffer = ByteBuffer()
         try! encoder.encode(self, into: &buffer)
-        return HTTPBody(.init(buffer: buffer))        
+        return HTTPBody(.init(buffer: buffer))
     }
 }

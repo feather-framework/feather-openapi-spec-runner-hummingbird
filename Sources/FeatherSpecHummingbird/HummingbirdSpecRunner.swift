@@ -12,7 +12,7 @@ public struct HummingbirdSpecRunner: SpecRunner {
 
     /// The application that conforms to `ApplicationProtocol`.
     private let app: any ApplicationProtocol
-    
+
     /// The setup configuration for testing.
     private let testingSetup: TestingSetup
 
