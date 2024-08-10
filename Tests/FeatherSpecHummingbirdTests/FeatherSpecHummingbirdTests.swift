@@ -1,88 +1,134 @@
-//
-//  FeatherSpecHummingbirdTests.swift
-//  FeatherSpecHummingbird
-//
-//  Created by Tibor Bödecs on 24/11/2023.
-//
-
-import Foundation
 import XCTest
 import OpenAPIRuntime
-import HTTPTypes
 import FeatherSpec
 import Hummingbird
-import HummingbirdTesting
 @testable import FeatherSpecHummingbird
-
-enum SomeError: Error {
-    case foo
-}
-
-struct Todo: Codable {
-    let title: String
-}
-
-extension Todo: ResponseCodable {}
 
 final class FeatherSpecHummingbirdTests: XCTestCase {
 
-    func other() async throws {
-        throw SomeError.foo
-    }
-
-    func testHummingbird() async throws {
+    let todo = Todo(title: "task01")
+    let body = Todo(title: "task01").httpBody
+    
+    func todosApp() async throws -> any ApplicationProtocol {
         let router = Router()
         router.post("todos") { req, ctx in
             try await req.decode(as: Todo.self, context: ctx)
         }
 
-        let app = Application(router: router)
-        let runner = HummingbirdExpectationRequestRunner(app: app)
-        try await test(using: runner)
+        return Application(router: router)
     }
-
-    func test(using runner: SpecRunner) async throws {
-        let encoder = JSONEncoder()
-        var buffer = ByteBuffer()
-        try encoder.encode(Todo(title: "task01"), into: &buffer)
-        let body = HTTPBody(.init(buffer: buffer))
-
-        try await SpecBuilder {
+    
+    func testMutatingfuncSpec() async throws {
+        let app = try await todosApp()
+        let runner = HummingbirdSpecRunner(app: app)
+        
+        var spec = Spec()
+        spec.setMethod(.post)
+        spec.setPath("todos")
+        spec.setBody(todo.httpBody)
+        spec.setHeader(.contentType, "application/json")
+        spec.addExpectation(.ok)
+        spec.addExpectation { response, body in
+            let todo = try await body.decode(Todo.self, with: response)
+            XCTAssertEqual(todo.title, self.todo.title)
+        }
+        
+        try await runner.run(spec)
+    }
+    
+    func testBuilderFuncSpec() async throws {
+        let app = try await todosApp()
+        let runner = HummingbirdSpecRunner(app: app)
+        
+        let spec = Spec()
+            .post("todos")
+            .header(.contentType, "application/json")
+            .body(body)
+            .expect(.ok)
+            .expect { response, body in
+                let todo = try await body.decode(Todo.self, with: response)
+                XCTAssertEqual(todo.title, "task01")
+            }
+        
+        try await runner.run(spec)
+    }
+    
+    func testDslSpec() async throws {
+        let app = try await todosApp()
+        let runner = HummingbirdSpecRunner(app: app)
+        
+        let spec = SpecBuilder {
             Method(.post)
             Path("todos")
             Header(.contentType, "application/json")
             Body(body)
             Expect(.ok)
             Expect { response, body in
-                let buffer = try await body.collect()
-                let decoder = JSONDecoder()
-                let todo = try decoder.decode(Todo.self, from: buffer)
+                let todo = try await body.decode(Todo.self, with: response)
                 XCTAssertEqual(todo.title, "task01")
             }
         }
-        .build(using: runner)
-        .test()
-
-        var spec = Spec(runner: runner)
-        spec.setMethod(.post)
-        spec.setPath("todos")
-        spec.setBody(body)
-        spec.setHeader(.contentType, "application/json")
-        spec.addExpectation(.ok)
-        spec.addExpectation { response, body in
-            /// same as above...
-        }
-        try await spec.test()
-
-        try await Spec(runner: runner)
-            .post("todos")
-            .header(.contentType, "application/json")
-            .body(body)
-            .expect(.ok)
-            .expect { response, body in
-                // some expectation...
-            }
-            .test()
+        .build()
+        
+        try await runner.run(spec)
     }
-
+    
+    func testMultipleSpecs() async throws {
+        let app = try await todosApp()
+        let runner = HummingbirdSpecRunner(app: app)
+        
+        let spec1 = SpecBuilder {
+            Method(.post)
+            Path("todos")
+            Header(.contentType, "application/json")
+            Body(body)
+            Expect(.ok)
+        }
+        .build()
+        
+        let spec2 = SpecBuilder {
+            Method(.post)
+            Path("/todos")
+            Header(.contentType, "application/json")
+            Body(body)
+            Expect(.ok)
+        }
+        .build()
+        
+        try await runner.run(spec1, spec2)
+    }
+    
+    func testNoPath() async throws {
+        let router = Router()
+        let app = Application(router: router)
+        let runner = HummingbirdSpecRunner(app: app)
+        
+        try await runner.run {
+            Method(.get)
+        }
+    }
+    
+    func testUnkownLength() async throws {
+        let sequence = AnySequence(#"{"title":"task01"}"#.utf8)
+        let body = HTTPBody(
+            sequence,
+            length: .unknown,
+            iterationBehavior: .single
+        )
+        
+        let app = try await todosApp()
+        let runner = HummingbirdSpecRunner(app: app)
+        
+        try await runner.run {
+            Method(.post)
+            Path("todos")
+            Header(.contentType, "application/json")
+            Body(body)
+            Expect(.ok)
+            Expect { response, body in
+                let todo = try await body.decode(Todo.self, with: response)
+                XCTAssertEqual(todo.title, "task01")
+            }
+        }
+    }
 }
