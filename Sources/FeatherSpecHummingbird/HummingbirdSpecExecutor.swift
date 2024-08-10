@@ -24,6 +24,7 @@ struct HummingbirdSpecExecutor: SpecExecutor {
     ///
     /// - Returns: A tuple containing the HTTP response and the response body.
     ///
+    /// - Throws: Rethrows an underlying error.
     public func execute(
         req: HTTPRequest,
         body: HTTPBody

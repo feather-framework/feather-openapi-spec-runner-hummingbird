@@ -14,6 +14,7 @@ extension HTTPBody {
     ///
     /// - Returns: A `ByteBuffer` containing the collected data.
     ///
+    /// - Throws: Rethrows an underlying error.
     func collect() async throws -> ByteBuffer {
         var buffer = ByteBuffer()
         switch length {

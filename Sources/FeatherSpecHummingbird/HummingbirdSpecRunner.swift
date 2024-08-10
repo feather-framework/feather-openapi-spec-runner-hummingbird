@@ -36,6 +36,7 @@ public struct HummingbirdSpecRunner: SpecRunner {
     ///
     /// - Parameter block: A closure that takes a `SpecExecutor` and performs asynchronous operations.
     ///
+    /// - Throws: Rethrows an underlying error.
     public func test(
         block: @escaping (SpecExecutor) async throws -> Void
     ) async throws {
